@@ -8,8 +8,11 @@ RUN apk add --no-cache \
         pdo \
         pdo_pgsql
 
-# Installez Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Installer les dépendances nécessaires pour Composer
+RUN apk add --no-cache git unzip curl
+
+# Téléchargez et installez Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Définissez le répertoire de travail
 WORKDIR /var/www/html
