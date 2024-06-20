@@ -1,6 +1,9 @@
 # Utilisez une image de base officielle de PHP avec FPM et Alpine
 FROM php:8.3-fpm-alpine
 
+# Installez les dépendances nécessaires pour PostgreSQL
+RUN apk add --no-cache postgresql-dev
+
 # Installez les extensions PHP nécessaires
 RUN docker-php-ext-install pdo pdo_pgsql
 
