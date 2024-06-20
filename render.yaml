@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: laravel-app
+    env: docker
+    plan: free
+    dockerfilePath: Dockerfile
+    buildCommand: composer install && php artisan key:generate && php artisan migrate --force
+    startCommand: php-fpm
+    envVars:
+      - fromGroup: memories_app_development
