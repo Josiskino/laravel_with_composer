@@ -24,7 +24,7 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 # Changez les permissions du répertoire de stockage et du cache
-RUN chown -R www-data:www-data:w /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Exposez le port 9000 et démarrez PHP-FPM
 EXPOSE 9000
