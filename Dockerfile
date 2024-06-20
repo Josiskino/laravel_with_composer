@@ -20,12 +20,18 @@ WORKDIR /var/www/html
 # Copiez les fichiers de l'application
 COPY . .
 
+# Copiez la configuration Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
 # Installez les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
 
 # Changez les permissions du répertoire de stockage et du cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Exposez le port 9000 et démarrez PHP-FPM
+# Exposez les ports nécessaires
+EXPOSE 80
 EXPOSE 9000
-CMD ["php-fpm"]
+
+# Commande pour démarrer Nginx et PHP-FPM
+CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
