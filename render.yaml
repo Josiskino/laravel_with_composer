@@ -23,6 +23,6 @@ services:
   dockerfilePath: ./Dockerfile
   rootDir: ./
   buildCommand: composer install && php artisan key:generate && php artisan migrate --force
-  startCommand: php-fpm
+  startCommand: php artisan serve --port=9000
   port: 9000
 
