@@ -1,37 +1,20 @@
-# Utilisez une image de base officielle de PHP avec FPM et Alpine
-FROM php:8.3-fpm-alpine
+FROM richarvey/nginx-php-fpm:1.7.2
 
-# Installez les extensions PHP nécessaires, y compris pdo_pgsql
-RUN apk add --no-cache \
-        postgresql-dev \
-    && docker-php-ext-install \
-        pdo \
-        pdo_pgsql
-
-# Installer les dépendances nécessaires pour Composer
-RUN apk add --no-cache git unzip curl
-
-# Téléchargez et installez Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Définissez le répertoire de travail
-WORKDIR /var/www/html
-
-# Copiez les fichiers de l'application
 COPY . .
 
-# Copiez la configuration Nginx
-COPY nginx.conf /etc/nginx/nginx.conf
+# Image config
+ENV SKIP_COMPOSER 1
+ENV WEBROOT /var/www/html/public
+ENV PHP_ERRORS_STDERR 1
+ENV RUN_SCRIPTS 1
+ENV REAL_IP_HEADER 1
 
-# Installez les dépendances PHP
-RUN composer install --no-dev --optimize-autoloader
+# Laravel config
+ENV APP_ENV production
+ENV APP_DEBUG false
+ENV LOG_CHANNEL stderr
 
-# Changez les permissions du répertoire de stockage et du cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Allow composer to run as root
+ENV COMPOSER_ALLOW_SUPERUSER 1
 
-# Exposez les ports nécessaires
-EXPOSE 80
-EXPOSE 9000
-
-# Commande pour démarrer Nginx et PHP-FPM
-CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+CMD ["/start.sh"]
